@@ -386,7 +386,7 @@ void RealSenseNodeFactory::startDevice()
         {
             _realSenseNode = std::unique_ptr<T265RealsenseNode>(new T265RealsenseNode(*this, _device, _parameters, this->get_node_options().use_intra_process_comms()));
             auto der = dynamic_cast<T265RealsenseNode *>(_realSenseNode.get());
-            der->publishTopics2();
+            der->publishTopics();
         }
         break;
         default:
