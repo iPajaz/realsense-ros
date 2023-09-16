@@ -380,17 +380,20 @@ void RealSenseNodeFactory::startDevice()
         case RS_L515_PID:
         case RS_L535_PID:
             _realSenseNode = std::unique_ptr<BaseRealSenseNode>(new BaseRealSenseNode(*this, _device, _parameters, this->get_node_options().use_intra_process_comms()));
+            _realSenseNode->publishTopics();
             break;
         case RS_T265_PID:
+        {
             _realSenseNode = std::unique_ptr<T265RealsenseNode>(new T265RealsenseNode(*this, _device, _parameters, this->get_node_options().use_intra_process_comms()));
-            break;
+            auto der = dynamic_cast<T265RealsenseNode *>(_realSenseNode.get());
+            der->publishTopics2();
+        }
+        break;
         default:
             ROS_FATAL_STREAM("Unsupported device!" << " Product ID: 0x" << pid_str);
             rclcpp::shutdown();
             exit(1);
         }
-        _realSenseNode->publishTopics();
-
     }
     catch(const rs2::backend_error& e)
     {
